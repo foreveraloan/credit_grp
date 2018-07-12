@@ -1,12 +1,17 @@
 library(questionr)
+
+library(ggplot2)
+install.packages('ggplot2')
 install.packages('questionr')
 
+
 column_names = c("Comptes", "Duree_credit", "Historique_credit", "Objet_credit", "Montant_credit", "Epargne",
-    "Anciennete_emploi", "taux_effort", "Situation_familiale", "Garanties", "Anciennete_domicile", "Biens", "Age",
-    "Autres_credits", "Statut_domicile", "Nb_credits", "Type_emploi", "Nb_pers_charge", "Telephone", "Etranger", "Cible")
+                 "Anciennete_emploi", "taux_effort", "Situation_familiale", "Garanties", "Anciennete_domicile", "Biens", "Age",
+                 "Autres_credits", "Statut_domicile", "Nb_credits", "Type_emploi", "Nb_pers_charge", "Telephone", "Etranger", "Cible")
 
+getwd()
 
-df= read.table("data/credit.txt", col.names = column_names)
+df= read.table("credit.txt", col.names = column_names)
 
 data_100 = data = read.table("data/credit.txt", nrows = 100, col.names = column_names)
 
@@ -27,23 +32,36 @@ summary(df)
 
 #logistic regression
 
-y =
 
 smp_size <- floor(0.75 * nrow(df))
 smp_size <- sample(seq_len(nrow(df)), size = smp_size)
 smp_size
 
-train <- df[smp_size,]
-dim(train)
 
+
+X <- df[, 1:20]
+y <- df[, 21]
+dim(X)
+dim(y)
+
+
+train <- df[smp_size,]
 test <- df[-smp_size,]
+dim(train)
 dim(test)
 
-x_train <- subset(X, select = -Cible)
-head(x_train)
 
+
+x_train <- X[smp_size,]
+x_test <- X[-smp_size,]
 dim(x_train)
+dim(x_test)
 
-y_train <- train$Cible
-y_train
+y_train <- y[smp_size,]
+y_test <- y[-smp_size,]
+dim(y_train)
+dim(y_test)
+
+random.rd = randomForest(Cible ~ ., data=df, xtest = x_test, ytest=y_test)
+random.rd
 
